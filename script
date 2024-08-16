@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Step 1: Generate Data
+echo "Daily generated data" > /home/kali/system_01/daily_data.txt
+
+# Step 2: Generate Digital Signature
+openssl dgst -sha256 -sign /home/kali/system_01/private_key.pem -out /home/kali/system_01/daily_data.sig /home/kali/system_01/daily_data.txt
+
+# Step 3: Forward Data
+scp /home/kali/system_01/daily_data.txt fursan005@192.168.1.81:/home/fursan005/system_02/
+scp /home/user1/folder1/daily_data.sig fursan005@192.168.1.81:/home/fursan005/system_02/
+
+# Step 4: Verify and Decrypt on System 2
+openssl dgst -sha256 -verify /home/fursan005/system_02/public_key.pem -signature /home/fursan005/system_02/daily_data.sig /home/fursan005/system_02/daily_data.txt
+
